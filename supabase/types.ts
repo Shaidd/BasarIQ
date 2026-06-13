@@ -453,10 +453,10 @@ export type Database = {
         Relationships: []
       }
     }
-    Views: Record<string, never>
+    Views: Record<never, never>
     Functions: {
-      get_user_role: { Args: Record<string, never>; Returns: string }
-      is_moderator: { Args: Record<string, never>; Returns: boolean }
+      get_user_role: { Args: Record<PropertyKey, never>; Returns: string }
+      is_moderator: { Args: Record<PropertyKey, never>; Returns: boolean }
       normalize_alias_input: { Args: { raw: string }; Returns: string }
       resolve_cut_alias: {
         Args: { raw: string }
@@ -464,15 +464,15 @@ export type Database = {
       }
       cut_regional_median: {
         Args: { p_cut_id: string; p_region: string; p_days?: number }
-        Returns: number | null
+        Returns: number
       }
       observation_freshness: {
         Args: { p_source: string; p_observed_at: string; p_is_sale?: boolean; p_sale_ends_at?: string | null }
         Returns: string
       }
     }
-    Enums: Record<string, never>
-    CompositeTypes: Record<string, never>
+    Enums: Record<never, never>
+    CompositeTypes: Record<never, never>
   }
 }
 
