@@ -17,6 +17,22 @@ export type PriceResult =
   | { error: string }
   | { warning: true; warningType: 'below' | 'above'; median: number }
 
+// Minimal typed interface for the three DB operations this action needs.
+// Replaced automatically once `npx supabase gen types` runs against a live DB.
+interface MinimalDb {
+  from(table: 'vendors'): {
+    select(cols: string): {
+      eq(col: string, val: string): {
+        single(): Promise<{ data: { region: string } | null; error: unknown }>
+      }
+    }
+  }
+  from(table: 'price_observations'): {
+    insert(data: Record<string, unknown>): Promise<{ error: { message: string } | null }>
+  }
+  rpc(fn: string, args: Record<string, unknown>): Promise<{ data: number | null; error: unknown }>
+}
+
 export async function addPriceObservation(input: PriceInput): Promise<PriceResult> {
   const { cutId, vendorId, pricePerKg, isSale, saleEndsAt, confirmed } = input
 
@@ -28,15 +44,13 @@ export async function addPriceObservation(input: PriceInput): Promise<PriceResul
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  // Use explicit cast — supabase-js v2 type inference requires generated types for partial selects
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any
+  const db = supabase as unknown as MinimalDb
 
   const { data: vendor } = await db
     .from('vendors')
     .select('region')
     .eq('id', vendorId)
-    .single() as { data: { region: string } | null }
+    .single()
 
   if (!vendor) return { error: 'Vendor not found' }
 
@@ -44,7 +58,7 @@ export async function addPriceObservation(input: PriceInput): Promise<PriceResul
     const { data: median } = await db.rpc('cut_regional_median', {
       p_cut_id: cutId,
       p_region: vendor.region,
-    }) as { data: number | null }
+    })
 
     if (median != null) {
       if (pricePerKg < median * 0.3) {
@@ -66,7 +80,7 @@ export async function addPriceObservation(input: PriceInput): Promise<PriceResul
     source: 'manual',
     contributor_id: user.id,
     observed_at: new Date().toISOString(),
-  }) as { error: { message: string } | null }
+  })
 
   if (error) return { error: error.message }
 
