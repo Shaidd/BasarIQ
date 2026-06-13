@@ -45,12 +45,12 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 
 Work through milestones in order — each is independently shippable:
 
-- **M0 — Foundation:** Supabase schema + RLS policies + seed data (cut catalog, vendor directory from Excel, historical prices)
-- **M1 — Core loop:** Auth (magic link + Google OAuth), vendor/cut browse, manual price entry, per-cut history chart
-- **M2 — Photo OCR:** Upload → Edge Function → Claude vision extraction → confirm screen → audit trail
+- **M0 — Foundation:** ✅ Supabase schema + RLS policies + seed data (cut catalog, vendor directory from Excel, historical prices)
+- **M1 — Core loop:** ✅ Auth (magic link + Google OAuth), vendor/cut browse, manual price entry, per-cut history chart
+- **M2 — Photo OCR:** ✅ Upload → Next.js API route (`/api/ocr`) → Claude vision extraction → confirm screen → audit trail
 - **M3 — Sourcing engine:** Shopping lists, geo radius + delivery region scoring, single-best-store results UI
 - **M4 — Community layer:** Flags, moderator dashboard, vendor suggestions, invite management
-- **M5 — Web extraction:** `vendor_sources`, nightly cron job, extraction review queue
+- **M5 — Web extraction:** `vendor_sources`, nightly cron job (Supabase Edge Function), extraction review queue
 
 ## Architecture
 
@@ -59,8 +59,10 @@ Work through milestones in order — each is independently shippable:
 ```
 User → Next.js App Router (Vercel)
          ↓ Supabase client (RLS-enforced)
-         ↓ Supabase Edge Functions (extraction, scheduled jobs)
-              ↓ Claude API (photo OCR + web extraction — same JSON contract)
+         ↓ Next.js API route /api/ocr  ← photo uploads (M2)
+              ↓ Claude API (vision extraction)
+         ↓ Supabase Edge Functions     ← nightly web extraction only (M5)
+              ↓ Claude API (text extraction — same JSON contract)
          ↓ Postgres (cuts, vendors, price_observations, …)
 ```
 
@@ -68,18 +70,24 @@ User → Next.js App Router (Vercel)
 
 **Cut alias resolution** (`lib/aliases.ts`) — shared by manual search, photo OCR, and web extraction. Pipeline: normalize input (strip nikud, punctuation, ₪/kg tokens, lowercase) → exact match on `cut_aliases` → trigram fuzzy match (pg_trgm, similarity ≥ 0.75, top 3) → null if no match. User corrections on the OCR confirm screen are logged to `alias_suggestions` for moderator promotion.
 
-**Claude extraction contract** — one shared JSON schema used by both photo OCR and web extraction:
+**Claude extraction contract** — one shared JSON schema used by both photo OCR and web extraction (`lib/types/ocr.ts`):
 ```ts
 type ExtractionRow = {
-  raw_text: string;
-  matched_cut_id: string | null;
+  raw_text: string;           // exact text as seen in the image
+  matched_cut_id: string | null;  // resolved by resolve_cut_alias() RPC; null if unmatched
+  matched_cut_name: string | null; // cut name as Claude read it (Hebrew or English)
   price: number | null;
   unit: 'per_kg' | 'per_100g' | 'per_unit' | 'ambiguous';
   confidence: number; // 0–1
   needs_review: boolean;
 }
 ```
-Normalize all prices to ₪/kg. If unit is ambiguous, set `needs_review: true` — never guess.
+Claude returns `matched_cut_name` (the raw text label); alias resolution runs server-side via `resolve_cut_alias` RPC and populates `matched_cut_id`. Normalize all prices to ₪/kg before storing (`per_100g` × 10). If unit is ambiguous, set `needs_review: true` — never guess.
+
+**Photo OCR pipeline** (M2) —
+- `app/api/ocr/route.ts` — POST endpoint; accepts `multipart/form-data` (`image` + `vendorId`); uploads to Supabase Storage `photos` bucket; inserts `photos` row (audit trail written before calling Claude so it survives API failures); calls `claude-sonnet-4-6` vision with bilingual prompt; runs `resolve_cut_alias` RPC on each row; persists `extraction_json` back to the `photos` row.
+- `app/actions/ocr.ts` — `saveOcrObservations` server action; bulk-inserts confirmed rows into `price_observations` with `source='photo'`; logs unresolved `matched_cut_name` values to `alias_suggestions` for moderator promotion.
+- `components/OcrUploader.tsx` — client step machine: select vendor → camera/upload → preview → extracting spinner → confirm screen (per-row cut picker + price field + include toggle) → done/error.
 
 **Sourcing engine** (`lib/sourcing.ts`) — candidate set = pickup vendors within radius ∪ delivery vendors whose `delivery_regions` cover user's region. Score = Σ(price × kg) + delivery_fee. Coverage rule: vendor must cover ≥ 70% of list weight; missing cuts penalized at regional 30-day median × 1.15. Exclude delivery vendors below `delivery_min_order`. Always surface data freshness — never silently use stale data.
 
