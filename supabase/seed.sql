@@ -1,141 +1,221 @@
--- =============================================================
--- BasarIQ — seed data (M0)
--- =============================================================
--- Cut numbers and Hebrew names are placeholders — verify and
--- replace with the official catalog Excel asset before launch.
--- Vendors are placeholders — import from Sharon/Galilee Excel.
--- Historical price_observations: run the tracker-import script
--- after the DB is seeded (see scripts/import-tracker-prices.ts).
--- =============================================================
+-- =================================================================
+-- BasarIQ seed data — generated from Excel assets
+-- Meat_dictionary.xlsx  → cuts + cut_aliases
+-- meat_suppliers_master.xlsx → vendors
+-- Historical price_observations: run scripts/import-tracker-prices.ts
+-- =================================================================
 
--- Fixed UUIDs for seed cuts so aliases can reference them
--- Format: 00000000-0000-0000-0000-00000000000N
-
--- =============================================================
--- CUTS CATALOG
--- =============================================================
+-- 30 cuts, 87 aliases
 insert into public.cuts
   (id, category, name_en, name_he, israeli_number, primal, kosher_notes, status)
 values
-  -- Forequarter (no nikur required; standard kosher supply)
-  ('00000000-0000-0000-0000-000000000001','beef','Entrecôte (Ribeye)',   'אנטרקוט',     1,  'rib',    null,                              'active'),
-  ('00000000-0000-0000-0000-000000000002','beef','Short Ribs (Asado)',   'אסאדו',        2,  'rib',    null,                              'active'),
-  ('00000000-0000-0000-0000-000000000003','beef','Neck',                 'צוואר',        3,  'chuck',  null,                              'active'),
-  ('00000000-0000-0000-0000-000000000004','beef','Shoulder (Blade)',     'כתף',          4,  'chuck',  null,                              'active'),
-  ('00000000-0000-0000-0000-000000000005','beef','Brisket',              'בריסקט',       5,  'brisket',null,                              'active'),
-  ('00000000-0000-0000-0000-000000000006','beef','Flanken (Short Plate)','שפונדרה',      6,  'plate',  null,                              'active'),
-  ('00000000-0000-0000-0000-000000000007','beef','Fore Shank',           'שוק קדמי',     7,  'shank',  null,                              'active'),
-  -- Hindquarter (requires nikkur for kosher; available at non-kosher butchers)
-  ('00000000-0000-0000-0000-000000000008','beef','Sirloin',              'סינטה',        8,  'loin',   'Hindquarter — requires nikkur',   'active'),
-  ('00000000-0000-0000-0000-000000000009','beef','Tenderloin (Fillet)',  'פילה',         9,  'loin',   'Hindquarter — requires nikkur',   'active'),
-  ('00000000-0000-0000-0000-000000000010','beef','Rump',                 'שייטל',        10, 'round',  'Hindquarter — requires nikkur',   'active'),
-  ('00000000-0000-0000-0000-000000000011','beef','Round (Thigh)',        'ירך',          11, 'round',  'Hindquarter — requires nikkur',   'active'),
-  ('00000000-0000-0000-0000-000000000012','beef','Hind Shank',           'שוק אחורי',    12, 'shank',  'Hindquarter — requires nikkur',   'active'),
-  -- Unnumbered / specialty
-  ('00000000-0000-0000-0000-000000000013','beef','Chuck (Flat Iron)',    'צ''אק',        null,'chuck', null,                              'active'),
-  ('00000000-0000-0000-0000-000000000014','beef','Ground Beef',          'בשר טחון',     null,'other', null,                              'active'),
-  ('00000000-0000-0000-0000-000000000015','beef','Ground Beef (Lean)',   'בשר טחון רזה', null,'other', null,                              'active')
-;
+  ('b3a3891c-5847-45bc-a1b9-2ab4d252edf5','beef','Brisket','חזה',3,'brisket',null,'active'),
+  ('cdd61cf2-dafa-4653-bd6b-b37af7d00fbd','beef','Chuck / Chuck Eye','צ''אק',null,'chuck',null,'active'),
+  ('318f4b3a-c974-4e5f-8895-ce119ed99889','beef','Chuck / Chuck Roast','צלי כתף',5,'chuck',null,'active'),
+  ('4415ccc5-f3d7-4cce-a7c7-10bfe528955d','beef','Chuck / Unter Rib','אונטריב',2,'chuck',null,'active'),
+  ('c2da9bec-2b88-4b6a-b007-ed19746b45e7','beef','Chuck Tender / Shoulder Clod','כתף מרכזי',null,'chuck',null,'active'),
+  ('4f91c0ac-acac-4fb2-a168-216d38080a68','beef','Denver Cut','דנבר קאט',null,'chuck',null,'active'),
+  ('5bf4865b-68db-4e7c-b1a9-52262e030d4a','beef','Eye of Round / Silverside','וייסבראטן',null,'round','Hindquarter — requires nikkur','active'),
+  ('c669cc32-6139-4530-afb4-663078fceeb0','beef','Flank','כסל',17,'plate',null,'active'),
+  ('828182b1-76c6-4bdc-9b7a-8f7a2a45810b','beef','Flank Steak','פלאנק',17,'plate','Hindquarter — requires nikkur','active'),
+  ('e56d23c6-f98e-4ace-8e62-7c197f6a7299','beef','Flank Steak w/ fat envelope',null,null,'plate',null,'active'),
+  ('009adfc5-d230-4c4a-bc04-65680bf0561a','beef','Foreshank / Osso Bucco','שריר הזרוע',8,'shank',null,'active'),
+  ('2f2aae04-f8d9-44a4-9f6f-fc808f9adc8d','beef','Hanger Steak (thin and wide skirt steak?)','נתח קצבים',null,'plate','Hindquarter — requires nikkur','active'),
+  ('f6b92ecc-667e-4122-aaa8-4a8a9989e3fe','beef','Mock Tender / Chuck Tender','פילה מדומה',6,'chuck',null,'active'),
+  ('7a506684-ee54-47a9-894f-f9a8df5b890e','beef','Neck / Chuck','צוואר',10,'chuck',null,'active'),
+  ('ae6d18cd-2267-4151-9aae-9a55a26d082d','beef','Plate / Brisket (Navel End)','ויסגארמן',19,'brisket',null,'active'),
+  ('10f2c999-aada-4515-bf01-a65428a1592c','beef','Plate / Short plate','קשתית',9,'plate',null,'active'),
+  ('fc93e3a1-7df1-422a-b4e3-1447fc6a0b72','beef','Rear Shank','שריר אחורי',18,'shank','Hindquarter — requires nikkur','active'),
+  ('b19cf6aa-e196-461b-ac43-49145824f219','beef','Rib','צלעות',null,'rib',null,'active'),
+  ('be69b901-eae0-4f71-ae3f-a9784760779a','beef','Rib Cap / Deckle','מכסה הצלע',7,'rib',null,'active'),
+  ('fe72cb9c-09ea-43d4-8c4a-dffa025f73c7','beef','Ribeye, Rib / Prime Rib','אנטרקוט',1,'rib',null,'active'),
+  ('d82bd19e-7b0e-4462-9a60-0d5bc94bc8ec','beef','Rump Cap / Picanha','צאך',15,'round','Hindquarter — requires nikkur','active'),
+  ('a17b2217-eb78-4c71-bde2-35839b5d4aaa','beef','Shank / Heel of Round','פולי',null,'shank','Hindquarter — requires nikkur','active'),
+  ('3a3acae2-7ba4-4b7c-8966-637aac455ef7','beef','Short Loin','סינטה',11,'loin','Hindquarter — requires nikkur','active'),
+  ('6f31602f-d403-485f-9156-6641f6d3519a','beef','Short Ribs Flanken-cut','אסאדו',null,'plate',null,'active'),
+  ('a38162c0-bb63-4b67-8d12-dda6ad2b0d12','beef','Shoulder / Clod','כתף',4,'chuck',null,'active'),
+  ('c4a0c175-ea47-4762-b1c4-4af8625e67b2','beef','Sirloin','שייטל',13,'loin','Hindquarter — requires nikkur','active'),
+  ('fd93a2c6-1769-4664-b78d-e0016bf34560','beef','Sirloin Tip / Knuckle','אגוז',14,'loin','Hindquarter — requires nikkur','active'),
+  ('659e7933-0341-43a4-923c-21464bcf3655','beef','Tenderloin','פילה',12,'loin','Hindquarter — requires nikkur','active'),
+  ('596ea98e-733b-46be-8634-b83ecaca293b','beef','Topside / Minute Steak','כף',null,'round','Hindquarter — requires nikkur','active'),
+  ('b41ab6c5-a6f4-421c-a29c-1d5801f3937e','beef','Tri-Tip','שייטל',13,'round','Hindquarter — requires nikkur','active');
 
--- =============================================================
--- CUT ALIASES
--- Every alias is globally unique (case-insensitive) per unique index.
--- =============================================================
-insert into public.cut_aliases (id, cut_id, alias, lang) values
-  -- Entrecôte / Ribeye
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000001','אנטרקוט',    'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000001','entrecote',   'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000001','entrecôte',   'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000001','ribeye',      'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000001','rib eye',     'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000001','rib-eye',     'en'),
-  -- Asado / Short Ribs
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000002','אסאדו',       'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000002','asado',       'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000002','short ribs',  'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000002','צלעות',       'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000002','צלעות קצרות', 'he'),
-  -- Neck
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000003','צוואר',       'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000003','neck',        'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000003','chuck neck',  'en'),
-  -- Shoulder
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000004','כתף',         'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000004','shoulder',    'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000004','blade',       'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000004','chuck shoulder','en'),
-  -- Brisket
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000005','בריסקט',      'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000005','brisket',     'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000005','חזה',         'he'),
-  -- Flanken
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000006','שפונדרה',     'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000006','flanken',     'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000006','short plate', 'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000006','plate ribs',  'en'),
-  -- Fore Shank
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000007','שוק קדמי',    'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000007','fore shank',  'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000007','front shank', 'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000007','shank',       'en'),
-  -- Sirloin
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000008','סינטה',       'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000008','sirloin',     'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000008','striploin',   'en'),
-  -- Tenderloin
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000009','פילה',        'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000009','fillet',      'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000009','filet',       'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000009','tenderloin',  'en'),
-  -- Rump
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000010','שייטל',       'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000010','rump',        'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000010','rump steak',  'en'),
-  -- Round
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000011','ירך',         'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000011','round',       'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000011','thigh',       'en'),
-  -- Hind Shank
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000012','שוק אחורי',   'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000012','hind shank',  'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000012','back shank',  'en'),
-  -- Chuck / Flat Iron
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000013','צ''אק',       'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000013','chuck',       'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000013','flat iron',   'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000013','chuck roast', 'en'),
-  -- Ground Beef
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000014','בשר טחון',    'he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000014','ground beef', 'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000014','minced beef', 'en'),
-  -- Lean Ground Beef
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000015','בשר טחון רזה','he'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000015','lean ground', 'en'),
-  (gen_random_uuid(),'00000000-0000-0000-0000-000000000015','lean mince',  'en')
-;
-
--- =============================================================
--- VENDORS — placeholder (replace with Sharon + Galilee Excel import)
--- Fixed UUIDs: 00000000-0000-0000-0001-00000000000N
--- =============================================================
-insert into public.vendors
-  (id, name, type, region, city, lat, lng, delivers, delivery_regions, delivery_fee, delivery_min_order, rating, status)
+insert into public.cut_aliases (id, cut_id, alias, lang)
 values
-  -- Sharon
-  ('00000000-0000-0000-0001-000000000001','קצביית שמואל',         'butcher','sharon', 'נתניה',   32.3215, 34.8532, false, null,      null, null, 4.2, 'active'),
-  ('00000000-0000-0000-0001-000000000002','בשר טרי כפר סבא',      'butcher','sharon', 'כפר סבא', 32.1750, 34.9064, false, null,      null, null, 3.8, 'active'),
-  ('00000000-0000-0000-0001-000000000003','קצביית רענן',           'butcher','sharon', 'רעננה',   32.1837, 34.8710, false, null,      null, null, 4.5, 'active'),
-  -- North / Galilee
-  ('00000000-0000-0000-0001-000000000004','קצביית הגליל',          'butcher','north',  'עכו',     32.9298, 35.0832, false, null,      null, null, 4.0, 'active'),
-  ('00000000-0000-0000-0001-000000000005','בשר הכרמל',             'butcher','haifa',  'חיפה',    32.8156, 34.9892, false, null,      null, null, 3.9, 'active'),
-  ('00000000-0000-0000-0001-000000000006','קצביית כרמיאל',         'butcher','north',  'כרמיאל',  32.9147, 35.2978, false, null,      null, null, 4.1, 'active'),
-  -- Online delivery (nationwide)
-  ('00000000-0000-0000-0001-000000000007','בשר ישיר',              'online', 'center', 'תל אביב', null,    null,    true,  ARRAY['*'], 39,  250,  null,'active')
-;
+  ('6589972d-0741-4b0d-94e4-e8ef1a2bd8db','b3a3891c-5847-45bc-a1b9-2ab4d252edf5','חזה','he'),
+  ('035c77a5-246f-4d19-bf6e-a3c9d310f439','b3a3891c-5847-45bc-a1b9-2ab4d252edf5','Brisket','en'),
+  ('6e0750a3-3120-493e-a37c-76baac811885','b3a3891c-5847-45bc-a1b9-2ab4d252edf5','Deckle','en'),
+  ('07c632aa-e5c3-4d23-9d9b-9291ddd0cba7','b3a3891c-5847-45bc-a1b9-2ab4d252edf5','Flat Half','en'),
+  ('f92a0677-9812-4f17-9999-bce4226f4ae9','b3a3891c-5847-45bc-a1b9-2ab4d252edf5','Point Half','en'),
+  ('85e74300-83ae-4247-a939-e90fb914cd9f','cdd61cf2-dafa-4653-bd6b-b37af7d00fbd','צ''אק','he'),
+  ('125296a6-46dc-4157-8fb5-6dbc5c882a16','cdd61cf2-dafa-4653-bd6b-b37af7d00fbd','Chuck','en'),
+  ('52c81ff5-b5b1-413f-812a-33c3eb3eff76','cdd61cf2-dafa-4653-bd6b-b37af7d00fbd','Blade','en'),
+  ('6cc77608-9089-4c76-b624-cec86bc4071c','cdd61cf2-dafa-4653-bd6b-b37af7d00fbd','Arm Pot Roast','en'),
+  ('83992e17-2fe2-47c5-96d9-0c6785da897d','cdd61cf2-dafa-4653-bd6b-b37af7d00fbd','Shoulder Clod','en'),
+  ('9cffd8d7-2fcd-4ddc-84cc-6e75f046fa11','318f4b3a-c974-4e5f-8895-ce119ed99889','צלי כתף','he'),
+  ('e4735844-0c45-40f2-8005-2eb8ed01f71e','4415ccc5-f3d7-4cce-a7c7-10bfe528955d','אונטריב','he'),
+  ('1ca8d99a-36e1-48d6-8d60-ba091bb43fb9','c2da9bec-2b88-4b6a-b007-ed19746b45e7','כתף מרכזי','he'),
+  ('9f4d5aa1-d375-401b-b6c2-36d1cbae464b','c2da9bec-2b88-4b6a-b007-ed19746b45e7','Chuck Tender','en'),
+  ('e15b5b7a-6a9c-4125-b7d5-40699fcd8b02','4f91c0ac-acac-4fb2-a168-216d38080a68','דנבר קאט','he'),
+  ('10f37f6d-0a4f-4b6a-a0e1-f6a8ff777634','4f91c0ac-acac-4fb2-a168-216d38080a68','Denver Cut','en'),
+  ('ecd349ca-cb13-4d5b-b629-1a9666b97384','5bf4865b-68db-4e7c-b1a9-52262e030d4a','וייסבראטן','he'),
+  ('1eb03d93-7357-452b-8b09-cd5c44f29cd6','5bf4865b-68db-4e7c-b1a9-52262e030d4a','ראש ירכה','he'),
+  ('e8f804f7-f2d3-424e-ad19-84890c301e39','5bf4865b-68db-4e7c-b1a9-52262e030d4a','Eye of Round','en'),
+  ('372d2a82-2d6b-437c-867d-96eedbf995b2','c669cc32-6139-4530-afb4-663078fceeb0','כסל','he'),
+  ('404b38d4-30c2-4218-a21f-ad559035b92d','c669cc32-6139-4530-afb4-663078fceeb0','פלדה','he'),
+  ('25a23884-55e5-4d40-afe2-2f8321a0aa06','c669cc32-6139-4530-afb4-663078fceeb0','Flank','en'),
+  ('0abc6ddc-9a70-401e-9f28-11257f5ee768','828182b1-76c6-4bdc-9b7a-8f7a2a45810b','פלאנק','he'),
+  ('08a3a99a-6fb6-4381-8660-31d2b02c3c5e','828182b1-76c6-4bdc-9b7a-8f7a2a45810b','פלחית','he'),
+  ('15545fee-d0d9-4f5f-b76b-760f204232b4','828182b1-76c6-4bdc-9b7a-8f7a2a45810b','פנצ''ה','he'),
+  ('a1442f51-1f5e-4ba4-9c2d-ca3dad4744b0','828182b1-76c6-4bdc-9b7a-8f7a2a45810b','Flank Steak','en'),
+  ('5fcfe9bb-8bd8-48d2-ba94-7da9cfacd3e7','e56d23c6-f98e-4ace-8e62-7c197f6a7299','Flank Steak w','en'),
+  ('23770fe3-ccb2-4e4b-8882-ce2ff244c84a','e56d23c6-f98e-4ace-8e62-7c197f6a7299','Vasio','en'),
+  ('df890c0f-da73-41c5-b58f-0686bae0f805','009adfc5-d230-4c4a-bc04-65680bf0561a','שריר הזרוע','he'),
+  ('4b67aed3-ee37-4874-ac76-1fb52f584e9e','009adfc5-d230-4c4a-bc04-65680bf0561a','אוסובוקו','he'),
+  ('40ae30ee-5db3-415d-b32f-17d78945a03c','009adfc5-d230-4c4a-bc04-65680bf0561a','Foreshank','en'),
+  ('d7f81833-9f9e-409a-947e-f420a40c21c9','2f2aae04-f8d9-44a4-9f6f-fc808f9adc8d','נתח קצבים','he'),
+  ('ea6adbb5-d940-41c0-bdb1-858111ee51cc','2f2aae04-f8d9-44a4-9f6f-fc808f9adc8d','Hanger Steak','en'),
+  ('63c4f41b-afa4-4650-8920-b9702b4cc789','2f2aae04-f8d9-44a4-9f6f-fc808f9adc8d','Onglet','en'),
+  ('eb7154f0-4e7a-4753-aadd-d8a77ecc2f87','f6b92ecc-667e-4122-aaa8-4a8a9989e3fe','פילה מדומה','he'),
+  ('3bb19a53-4d80-4340-adc9-1e4f1098af77','f6b92ecc-667e-4122-aaa8-4a8a9989e3fe','פאלש פילה','he'),
+  ('354b8a68-0c59-4c46-bd17-a7520c2bed69','f6b92ecc-667e-4122-aaa8-4a8a9989e3fe','Mock Tender','en'),
+  ('b3735282-6688-47a8-ba6c-f26ab5787038','7a506684-ee54-47a9-894f-f9a8df5b890e','צוואר','he'),
+  ('47a5d260-ff7b-4e43-b9a4-b9d222b20903','7a506684-ee54-47a9-894f-f9a8df5b890e','Neck','en'),
+  ('c0484012-d872-442d-a85f-e64fdc2ecde2','ae6d18cd-2267-4151-9aae-9a55a26d082d','ויסגארמן','he'),
+  ('d1c8cb68-c561-4147-97bf-642b318ce013','ae6d18cd-2267-4151-9aae-9a55a26d082d','Plate','en'),
+  ('9e721411-c165-4809-9489-26c38cb93623','10f2c999-aada-4515-bf01-a65428a1592c','קשתית','he'),
+  ('a2355b90-9832-4d2e-be2d-5ab4f80c0896','10f2c999-aada-4515-bf01-a65428a1592c','שפונדרה (חיתוך שונה)','he'),
+  ('fa53aa11-bc3a-4835-b2e5-bdc9f46d2097','10f2c999-aada-4515-bf01-a65428a1592c','Short Ribs (different cut)','en'),
+  ('d7f3184d-9926-48c1-8e72-77b3d0e24582','10f2c999-aada-4515-bf01-a65428a1592c','Skirt Steak','en'),
+  ('f4e3dbe1-f532-4d80-9b2c-07b376ae2ed0','10f2c999-aada-4515-bf01-a65428a1592c','Short Plate','en'),
+  ('60d8323a-09a7-4213-9aae-8bac6d653cbe','fc93e3a1-7df1-422a-b4e3-1447fc6a0b72','שריר אחורי','he'),
+  ('f02ae7e6-75f2-4504-81f4-082e27970b9c','fc93e3a1-7df1-422a-b4e3-1447fc6a0b72','Rear Shank','en'),
+  ('3ff83cc2-fa4c-45b5-b4c2-432d904f4ab5','b19cf6aa-e196-461b-ac43-49145824f219','צלעות','he'),
+  ('c34f1b89-5300-4957-ae8e-cf77a802a04d','b19cf6aa-e196-461b-ac43-49145824f219','Rib','en'),
+  ('e9d8ffdf-805d-4ae4-a005-b422ec8666e7','b19cf6aa-e196-461b-ac43-49145824f219','Ribeye','en'),
+  ('85186e10-16e4-429b-856f-d5c2e4e67d77','b19cf6aa-e196-461b-ac43-49145824f219','Standing Rib Roast','en'),
+  ('168e0722-edc4-41da-9c2b-92b457940236','b19cf6aa-e196-461b-ac43-49145824f219','Short Ribs','en'),
+  ('bbe86274-ca8f-4d0e-900f-8a2157450b23','be69b901-eae0-4f71-ae3f-a9784760779a','מכסה הצלע','he'),
+  ('fbfa9c5d-b4c3-4b6f-b676-15c1e6a90a7a','be69b901-eae0-4f71-ae3f-a9784760779a','Rib Cap','en'),
+  ('ba3c4ae7-0231-484b-ac6b-751eb811658f','fe72cb9c-09ea-43d4-8c4a-dffa025f73c7','אנטרקוט','he'),
+  ('4ac41b3e-e42f-4147-a7f9-3511368e02ba','fe72cb9c-09ea-43d4-8c4a-dffa025f73c7','ורד הצלע','he'),
+  ('e2f76d21-5541-4a20-b6ff-d320af167bb0','fe72cb9c-09ea-43d4-8c4a-dffa025f73c7','Ribeye, Rib','en'),
+  ('b6ac7497-145c-42f1-94c2-2ac4c93aaca8','d82bd19e-7b0e-4462-9a60-0d5bc94bc8ec','צאך','he'),
+  ('b5f5ecb1-9ad6-4815-bb2a-a0486b6f6cb1','d82bd19e-7b0e-4462-9a60-0d5bc94bc8ec','Rump Cap','en'),
+  ('bcaee735-e190-4f80-9991-bd152cb2d03f','a17b2217-eb78-4c71-bde2-35839b5d4aaa','פולי','he'),
+  ('1a941f18-f6cc-4c2f-be14-33b8238986b5','a17b2217-eb78-4c71-bde2-35839b5d4aaa','Shank','en'),
+  ('f639993f-4d09-4227-8eaa-6c1612c22b8d','3a3acae2-7ba4-4b7c-8966-637aac455ef7','סינטה','he'),
+  ('a81c96cd-66e2-4aa9-9051-44c89bdc2651','3a3acae2-7ba4-4b7c-8966-637aac455ef7','Short Loin','en'),
+  ('e8916cf8-faed-4bb5-9754-4d547ba45e43','6f31602f-d403-485f-9156-6641f6d3519a','אסאדו','he'),
+  ('fdeedcd3-23bf-4fd5-907c-383f9ad50577','6f31602f-d403-485f-9156-6641f6d3519a','Short Ribs Flanken-cut','en'),
+  ('75ec57a3-bcf6-4943-84e9-e504edd6bad3','a38162c0-bb63-4b67-8d12-dda6ad2b0d12','כתף','he'),
+  ('e85ad87a-47d8-4cf3-89e8-be39003ff223','a38162c0-bb63-4b67-8d12-dda6ad2b0d12','Shoulder','en'),
+  ('06bf636d-a993-40e7-841d-972ae9824b37','c4a0c175-ea47-4762-b1c4-4af8625e67b2','שייטל','he'),
+  ('6a9d6351-62d6-4847-a621-cefe43f0fbaf','c4a0c175-ea47-4762-b1c4-4af8625e67b2','כנף הכף','he'),
+  ('9af89824-b56e-4e6a-84cd-00bd9e5e947c','c4a0c175-ea47-4762-b1c4-4af8625e67b2','Sirloin','en'),
+  ('4c13409a-f0a3-4372-8cc8-227fab597088','c4a0c175-ea47-4762-b1c4-4af8625e67b2','Top Sirloin','en'),
+  ('101adf39-dede-4d2b-9ffd-c45b7f9bb43d','c4a0c175-ea47-4762-b1c4-4af8625e67b2','Bottom Sirloin','en'),
+  ('749d216d-fd6a-499b-a592-3b7a4a89c53c','c4a0c175-ea47-4762-b1c4-4af8625e67b2','Rump Steak','en'),
+  ('f3bc212d-5d87-46a5-ae28-ed2bcc3001d4','c4a0c175-ea47-4762-b1c4-4af8625e67b2','Tri-Tip','en'),
+  ('f58cbc81-b727-4171-b049-506dd5bad069','fd93a2c6-1769-4664-b78d-e0016bf34560','אגוז','he'),
+  ('fc8b4502-1efa-4b6b-af7f-072c2b30b420','fd93a2c6-1769-4664-b78d-e0016bf34560','נואזט','he'),
+  ('88c6a1ba-e8c4-4bdb-a132-a6f2d2b5b81e','fd93a2c6-1769-4664-b78d-e0016bf34560','קנאקל','he'),
+  ('63c0f278-73a6-4d37-b724-0cc903c331f5','fd93a2c6-1769-4664-b78d-e0016bf34560','אווזית','he'),
+  ('782f0e14-4f5c-4f38-b9de-9b5fd498f83b','fd93a2c6-1769-4664-b78d-e0016bf34560','Sirloin Tip','en'),
+  ('6b3f61da-a32b-415e-a9ea-aac86549fee1','659e7933-0341-43a4-923c-21464bcf3655','פילה','he'),
+  ('f56df99c-2723-43cb-97e4-8f5d014de8ab','659e7933-0341-43a4-923c-21464bcf3655','Tenderloin','en'),
+  ('cb91216b-d0fd-4e26-a7fb-15ec2006099a','659e7933-0341-43a4-923c-21464bcf3655','Filet Mignon','en'),
+  ('6813434d-dca1-41f5-a01c-225d4b12744d','659e7933-0341-43a4-923c-21464bcf3655','Chateaubriand','en'),
+  ('95a4bc43-8ea9-4832-bf44-4dbc956c03d0','596ea98e-733b-46be-8634-b83ecaca293b','כף','he'),
+  ('63ab3bb2-4054-4457-b611-90265c70b5e3','596ea98e-733b-46be-8634-b83ecaca293b','מינוט סטייק','he'),
+  ('87e24285-ec00-43a9-a49f-4bd061601121','596ea98e-733b-46be-8634-b83ecaca293b','Topside','en');
 
--- =============================================================
--- HISTORICAL PRICE OBSERVATIONS
--- Import from existing React tracker export.
--- Run after seeding: npx ts-node scripts/import-tracker-prices.ts
--- =============================================================
--- (no static rows here — tracker data varies and should be imported via script)
+-- 82 vendors (Sharon + North + Haifa + delivery)
+insert into public.vendors
+  (id, name, type, region, city, delivers, delivery_regions, delivery_fee, delivery_min_order, rating, status)
+values
+  ('42e919a8-11bd-4979-b02b-30a2c80ab45a','מיט-ארט (Meat Art)','butcher','sharon','כפר סבא',false,null,null,null,5.0,'active'),
+  ('eeb39d13-c644-4063-9e03-f0227d1133a4','פפה קצביה ומעדנייה','butcher','sharon','כפר סבא',true,ARRAY['sharon'],null,null,4.0,'active'),
+  ('d770cb74-0127-4963-b656-22228dc0267f','אטליז מנשה','butcher','sharon','כפר סבא',false,null,null,null,4.0,'active'),
+  ('90b0027f-3d3d-4722-ba4e-37b8f1d6791b','קצבייה בירוקה MBS','butcher','sharon','כפר סבא',false,null,null,null,4.0,'active'),
+  ('86a06f92-fc18-4d15-bd99-ad22fb0d0b79','אטליז העיר חלילי','butcher','sharon','כפר סבא',false,null,null,null,5.0,'active'),
+  ('852b43af-9463-4b6c-9c7d-3a8e9d76b719','מרכז הבשר — רפי נעים ובניו','butcher','sharon','רעננה',false,null,null,null,4.0,'active'),
+  ('f8189b2c-6775-4dc2-b633-3c2c26fc5c08','אטליז בוארון ובניו','butcher','sharon','רעננה',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('b4475a8b-1367-49b0-a4b8-92b913ca5221','Well Done (וול דאן)','butcher','sharon','רעננה',true,ARRAY['sharon'],null,null,4.0,'active'),
+  ('f5aa6d3c-472f-4ecb-b852-d985c4d4fa4b','קרן קור אטליז','butcher','sharon','רעננה',false,null,null,null,4.0,'active'),
+  ('45b7c134-fb68-4614-b773-ce0e6dcb779b','מעדני גורמה','butcher','sharon','רעננה',true,ARRAY['sharon'],null,null,4.0,'active'),
+  ('b07202b5-559e-4d35-a892-a2918546f200','מעדני בשר 2000','butcher','sharon','רעננה',true,ARRAY['sharon'],null,null,4.0,'active'),
+  ('d5ba3fae-5e91-4ae8-927d-d8a3d70071c3','Meatnet (מינט)','butcher','sharon','רעננה',true,ARRAY['sharon'],null,null,4.0,'active'),
+  ('a2a83e6a-e713-411a-8a6a-719197b8608c','הבשרים של קונטנטו','butcher','sharon','רעננה',true,ARRAY['sharon'],null,null,4.0,'active'),
+  ('e5627458-1a57-4a02-b4f9-025babba6482','עזרזר יחיאל מרכז הבשר','butcher','sharon','רעננה',false,null,null,null,4.0,'active'),
+  ('09fd3749-b1ab-4fde-9d76-ec9a354c9cec','חווית הבשר','butcher','sharon','רעננה',false,null,null,null,4.0,'active'),
+  ('7bc64d72-4a84-4f80-a395-b7bf10fa810f','קצב קצב בוצ''ר שופ','butcher','sharon','הוד השרון',false,null,null,null,5.0,'active'),
+  ('94189bc7-c764-4316-84e3-3b49633cfea5','משק לגזיאל — הוד השרון','butcher','sharon','הוד השרון',false,null,null,null,5.0,'active'),
+  ('843bbe4c-53d8-431c-8006-3863bec113c5','מ.א.ש בשר','butcher','sharon','הוד השרון',false,null,null,null,4.0,'active'),
+  ('8cf7b349-b907-4457-b164-fa01ad9db2c4','אטליז — השופטים 1','butcher','sharon','הרצליה',false,null,null,null,4.0,'active'),
+  ('5c620c2f-655c-4646-b5e1-d5f4764f3997','אטליז — שד'' אבא אבן 3','butcher','sharon','הרצליה פיתוח',false,null,null,null,4.0,'active'),
+  ('3fd61ef7-1412-425f-bd7c-e0701c5e30dd','דלישס','butcher','sharon','רמת השרון',false,null,null,null,5.0,'active'),
+  ('026bfe3a-4a93-44cb-b4d4-7e189b2d2360','אטליז — שוהם 10','butcher','sharon','נתניה',false,null,null,null,4.0,'active'),
+  ('9397681d-b6fb-4f11-8f8e-2e9aa5d7a54d','אטליז — שוהם 21','butcher','sharon','נתניה',false,null,null,null,4.0,'active'),
+  ('f352c65f-c57a-4e2c-899c-e20aef2c6da5','אטליז — שער העמק 8','butcher','sharon','נתניה',false,null,null,null,4.0,'active'),
+  ('0849b900-00bc-41ff-8044-ff38ac223897','נתחים פויינט','butcher','sharon','אבן יהודה',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('fa97ef21-91a6-49d4-b383-71f4f5473fc9','הקצביה — מתחם ביתנ''ס','butcher','sharon','ביתן אהרון',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('6c78046d-ba11-474b-9d40-cacc0b3b2ef0','קצביית פמילי מרקט','butcher','sharon','תל מונד',false,null,null,null,4.0,'active'),
+  ('cc2e25cb-57c2-411c-b149-118fccc38242','אטליז — יקינטון 14','butcher','sharon','כפר יונה',false,null,null,null,4.0,'active'),
+  ('5a8def78-4c22-426f-9958-d93b8401d241','הבשר של ניר','butcher','sharon','עמק חפר / כפר יונה',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('9d99c148-31e3-45c8-b1ad-2df5efe721fd','אטליז — הערבה 17','butcher','sharon','צור משה',false,null,null,null,4.0,'active'),
+  ('ff82de58-bf85-4d07-b445-21b7935015ee','אטליז אלדייעה','butcher','sharon','ג''לג''וליה',false,null,null,null,5.0,'active'),
+  ('3f95a0bc-a231-4ad8-8369-29babcb71832','אטליז עראקי יוסף','butcher','sharon','טירה',false,null,null,null,4.0,'active'),
+  ('fa5880d9-e360-4415-b935-fe1981ff640f','אטליז — רח'' 127 ג''לג''וליה','butcher','sharon','ג''לג''וליה',false,null,null,null,4.0,'active'),
+  ('3789feb9-96c9-461e-93da-85c242a2aee9','אטליז אליאור','butcher','sharon','אור עקיבא',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('0d0ed1ef-670d-4994-b96d-ab1131e081b0','אטליז בן חמו בשרים','butcher','sharon','אור עקיבא',false,null,null,null,5.0,'active'),
+  ('151ba0e4-b3bb-450d-a5f2-2a255028adb0','אטליז — הראשונים 2','butcher','sharon','גבעת אולגה, חדרה',false,null,null,null,4.0,'active'),
+  ('298acb47-2952-4330-a153-86543f25df33','אטליז — הגיבורים 52','butcher','sharon','חדרה',false,null,null,null,4.0,'active'),
+  ('00cbf845-5dbf-4abf-8359-3ab617f43de1','אטליז — הרברט סמואל 68','butcher','sharon','חדרה',false,null,null,null,4.0,'active'),
+  ('19a7b3b7-ec83-4f6b-bd3b-82893b386250','אטליז אבי פלדנשטיין','butcher','sharon','פרדס חנה-כרכור',false,null,null,null,5.0,'active'),
+  ('ce694db8-fe98-41a7-b15f-840290e015a1','צחי קצבים','butcher','sharon','פרדס חנה-כרכור',false,null,null,null,5.0,'active'),
+  ('337a35ab-c2a4-41fe-a9cd-484445bc9b9d','Meat & Fish','butcher','sharon','כרכור',false,null,null,null,5.0,'active'),
+  ('e4fed4dc-905e-4484-bfd6-0580500bbaab','אטליז אליאור — זכרון','butcher','sharon','זכרון יעקב',false,null,null,null,5.0,'active'),
+  ('238a4390-2fbb-411a-aa65-a81372089c07','מרכז אל עבודי לבשר','butcher','sharon','זכרון יעקב',false,null,null,null,4.0,'active'),
+  ('00285cf3-49ae-4509-9caf-b21a397f17ac','אורוקס Aurochs','butcher','sharon','קיסריה',false,null,null,null,5.0,'active'),
+  ('913d4180-64fa-40b9-9c8f-95c28bccfb82','אטליז אחים סבאח','butcher','haifa','חיפה',false,null,null,null,5.0,'active'),
+  ('368281f2-7865-4287-a1ac-a53c78573ec0','טיב בשר','butcher','haifa','חיפה',false,null,null,null,5.0,'active'),
+  ('eedf56c1-b5c9-4c95-9421-94190ccabd7d','אטליז אבו שקארה','butcher','haifa','חיפה (ואדי ניסנס)',false,null,null,null,5.0,'active'),
+  ('5f810e0d-b09a-4294-8680-7c1c260c8a96','מעדני בשר יהודה','butcher','haifa','חיפה / קריות',false,null,null,null,4.0,'active'),
+  ('feb90a74-f7cc-4a2c-b743-567680ae4911','מעדני הדר','butcher','haifa','חיפה',false,null,null,null,4.0,'active'),
+  ('cb55cc34-e5aa-49d4-a738-b98eb75f760b','א.א. טיב הבשר','butcher','haifa','חיפה / קריות',false,null,null,null,4.0,'active'),
+  ('b124fb75-40ba-4e17-90af-a0a43bca59d5','ראול קצביה בוטיק','butcher','haifa','חיפה / קריות',false,null,null,null,5.0,'active'),
+  ('dff97509-74a6-4436-aee7-d98f8e46a2d0','מעדני אלנור','butcher','haifa','ג''סר א-זרקא',false,null,null,null,4.0,'active'),
+  ('d8fe6671-2d2a-4baf-a781-efd4e2f52a8b','קצביה — בוטיק הבשר של עכו','butcher','north','עכו',false,null,null,null,5.0,'active'),
+  ('983d9d85-6bd5-42c5-a28f-e1666118b6b6','אטליז מויאל','butcher','north','נהריה',false,null,null,null,5.0,'active'),
+  ('8e988ea8-b194-47e2-ad0c-d2d888bc4c95','אטליז גבאי נהריה','butcher','north','נהריה',false,null,null,null,4.0,'active'),
+  ('3ee756c0-a067-48f8-85ab-e8b275019789','הקצביה של מוטי','butcher','north','נהריה',false,null,null,null,4.0,'active'),
+  ('302055cd-a1bf-4fa6-a330-576126c684dc','קרל ברג','butcher','north','נהריה (+ ארצי)',false,null,null,null,4.0,'active'),
+  ('96afb16d-7a3f-49db-bbe7-b1828a79f805','אלאדהמ בוטיק בשר','butcher','north','כפר יאסיף',false,null,null,null,5.0,'active'),
+  ('672fb7f2-20d0-4ce9-a0a9-b423b067f4d8','אדום וטרי','butcher','north','צפת',false,null,null,null,4.0,'active'),
+  ('5071156e-36e2-4870-812b-cdbd4f6b7f86','שמקה הקצב','butcher','north','ראש פינה',false,null,null,null,5.0,'active'),
+  ('96c16e17-6355-4361-bc96-e015ac819f90','שרה קצבים','butcher','north','גליל תחתון',false,null,null,null,5.0,'active'),
+  ('4331da8a-4480-48e9-950b-ef0607bc4a5b','קצביית הכהן','butcher','north','כרמיאל',false,null,null,null,4.0,'active'),
+  ('1cbfa95d-e61a-4e74-b68d-800b496b7a8b','בית הבשר רפאלי','butcher','north','כרמיאל',false,null,null,null,4.0,'active'),
+  ('62bae0f9-6090-4f57-a6c1-12a47918ec14','בשרל''ה כרמיאל','butcher','north','כרמיאל',false,null,null,null,4.0,'active'),
+  ('a2bc792d-d303-467d-92ee-ca8cb230b298','אטליז אלג''אבל','butcher','north','מגדל העמק',false,null,null,null,5.0,'active'),
+  ('8828007f-0b0a-4638-9d6e-d3d99561181f','נתח אדום','butcher','north','מגדל העמק',false,null,null,null,4.0,'active'),
+  ('1976ce30-2819-4bed-a615-63b3c01508dc','אטליז בוטיק אלשעבי','butcher','north','גליל תחתון',false,null,null,null,4.0,'active'),
+  ('c634f792-aa20-4242-982e-6577a8fd0fc4','אטליז הגליל 6000','butcher','north','נצרת',false,null,null,null,5.0,'active'),
+  ('4adc0c2d-0292-4cda-b167-2682e5e888b2','הקצביה טירת הכרמל','butcher','haifa','טירת כרמל',false,null,null,null,5.0,'active'),
+  ('5484b96c-7c11-4cb9-9e5a-245bbf2535aa','רמדאן סלאם','butcher','haifa','כפר טורעאן',false,null,null,null,5.0,'active'),
+  ('465f65f5-20ff-4472-983e-5707f6cdbd45','אומנות הבשר','butcher','haifa','קריית טבעון',false,null,null,null,5.0,'active'),
+  ('e7be71fb-d3c4-49d0-82f4-e97fdbf0db7a','האטליז של עלאא','butcher','haifa','קריית טבעון',false,null,null,null,4.0,'active'),
+  ('7c0d8f6a-ee2e-49d6-a96c-1e22bf659c4c','בשרי יוזי רימון','butcher','haifa','כפר שמריהו',false,null,null,null,4.0,'active'),
+  -- Delivery / online vendors
+  ('71095e0b-ae58-466c-a241-6e065c7cc373','משק לייכט','online','sharon','מושב בצרה',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('4ddd13d6-c332-4e09-8b65-a7357ab29444','מעדני גורמה (אונליין)','online','center','ארצי',true,ARRAY['*'],null,null,4.0,'active'),
+  ('6ce61e4b-c70f-4fb7-8419-7e96589a3455','Well Done (אונליין)','online','center','ארצי',true,ARRAY['*'],null,null,4.0,'active'),
+  ('dad58e3f-0ab1-4b37-b059-fd1fffb7252a','נתח קצבים (אונליין)','online','center','ארצי — 20 סניפים',true,ARRAY['*'],null,null,4.0,'active'),
+  ('ce84c4a6-ac68-4918-8238-aa6d65bdf40b','האחים אהרון','online','center','תל אביב',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('11cd5cc2-20bc-41a1-b601-48539a0767bc','מעדני הקצב','online','center','ארצי',true,ARRAY['*'],null,null,5.0,'active'),
+  ('e35ff2e8-e57b-4bec-b581-e71de1ea86cf','מיטמן (Meatman / Lagziel)','online','center','שילת / שרונה',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('a23de46a-010d-45f4-a331-0f9d48d594ff','הבשר של ניר (אונליין)','online','sharon','עמק חפר',true,ARRAY['sharon'],null,null,5.0,'active'),
+  ('4e271f69-d6ed-4634-aa16-c2ed4077320f','Meat & Fish כרכור (אונליין)','online','sharon','כרכור',true,ARRAY['sharon'],null,null,5.0,'active');
+
+-- Historical price_observations: import via scripts/import-tracker-prices.ts
