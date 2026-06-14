@@ -27,6 +27,7 @@ export default async function HomePage() {
         <QuickLink href="/cuts" title="Browse cuts" desc="Search the beef cut catalog" emoji="🥩" />
         <QuickLink href="/vendors" title="Browse vendors" desc="Find butchers by region" emoji="🏪" />
         <QuickLink href="/ocr" title="Log photo" desc="Scan a price tag with Claude OCR" emoji="📷" />
+        <QuickLink href="/shop" title="Find best store" desc="Shopping list + sourcing engine" emoji="🛒" />
       </div>
     </main>
   )

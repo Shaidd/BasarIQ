@@ -23,6 +23,7 @@ export type ShoppingListItem = {
 export type SourcingCandidate = {
   vendor_id: string
   vendor_name: string
+  vendor_city: string
   pickup_or_delivery: 'pickup' | 'delivery'
   distance_km: number | null        // null for delivery vendors
   delivery_fee: number | null
