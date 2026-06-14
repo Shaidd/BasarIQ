@@ -456,6 +456,11 @@ export type Database = {
     Views: Record<never, never>
     Functions: {
       get_user_role: { Args: Record<PropertyKey, never>; Returns: string }
+      // NOTE: manually added — do not overwrite when running gen types
+      get_vendors_in_radius: {
+        Args: { user_lat: number; user_lng: number; radius_km: number }
+        Returns: Database['public']['Tables']['vendors']['Row'][]
+      }
       is_moderator: { Args: Record<PropertyKey, never>; Returns: boolean }
       normalize_alias_input: { Args: { raw: string }; Returns: string }
       resolve_cut_alias: {

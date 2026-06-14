@@ -24,6 +24,9 @@ export default async function Nav() {
           <Link href="/ocr" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
             Log photo
           </Link>
+          <Link href="/shop" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+            Shop
+          </Link>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400 hidden sm:block truncate max-w-[160px]">
