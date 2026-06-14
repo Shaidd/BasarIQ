@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import PriceHistoryChart, { type ChartPoint } from '@/components/PriceHistoryChart'
 import PriceEntryForm from '@/components/PriceEntryForm'
+import FlagButton from '@/components/FlagButton'
 import { observationFreshness, type ObservationSource } from '@/lib/aliases'
 import type { Tables } from '@/supabase/types'
 
@@ -108,6 +109,7 @@ export default async function CutPage({ params }: { params: { id: string } }) {
                   <th className="px-4 py-3 text-xs text-gray-500 uppercase tracking-wide font-medium">Price/kg</th>
                   <th className="px-4 py-3 text-xs text-gray-500 uppercase tracking-wide font-medium">Date</th>
                   <th className="px-4 py-3 text-xs text-gray-500 uppercase tracking-wide font-medium">Age</th>
+                  <th className="px-4 py-3 w-8" />
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -130,6 +132,14 @@ export default async function CutPage({ params }: { params: { id: string } }) {
                         })}
                       </td>
                       <td className="px-4 py-3" title={f}>{FRESHNESS_BADGE[f]}</td>
+                      <td className="px-4 py-3 text-center">
+                        <FlagButton
+                          observationId={o.id}
+                          vendorName={o.vendor?.name ?? 'Unknown'}
+                          pricePerKg={o.price_per_kg}
+                          observedAt={o.observed_at}
+                        />
+                      </td>
                     </tr>
                   )
                 })}

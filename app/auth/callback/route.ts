@@ -8,6 +8,7 @@ type CookieItem = { name: string; value: string; options: CookieOptions }
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const invite = searchParams.get('invite')
   const next = searchParams.get('next') ?? '/'
 
   if (code) {
@@ -26,8 +27,16 @@ export async function GET(request: NextRequest) {
         },
       }
     )
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
+    const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error && user) {
+      // Mark invite as used if one was provided
+      if (invite) {
+        await supabase
+          .from('invites')
+          .update({ used_by: user.id, used_at: new Date().toISOString() })
+          .eq('code', invite)
+          .is('used_by', null) // idempotent — only updates if not already used
+      }
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

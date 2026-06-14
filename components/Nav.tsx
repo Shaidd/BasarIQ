@@ -8,6 +8,9 @@ export default async function Nav() {
 
   if (!user) return null
 
+  const { data: role } = await supabase.rpc('get_user_role')
+  const isModerator = role === 'moderator'
+
   return (
     <nav className="border-b bg-white sticky top-0 z-10">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
@@ -27,6 +30,11 @@ export default async function Nav() {
           <Link href="/shop" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
             Shop
           </Link>
+          {isModerator && (
+            <Link href="/moderator" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              Mod
+            </Link>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400 hidden sm:block truncate max-w-[160px]">
