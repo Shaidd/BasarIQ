@@ -48,8 +48,8 @@ Work through milestones in order — each is independently shippable:
 - **M0 — Foundation:** ✅ Supabase schema + RLS policies + seed data (cut catalog, vendor directory from Excel, historical prices)
 - **M1 — Core loop:** ✅ Auth (magic link + Google OAuth), vendor/cut browse, manual price entry, per-cut history chart
 - **M2 — Photo OCR:** ✅ Upload → Next.js API route (`/api/ocr`) → Claude vision extraction → confirm screen → audit trail
-- **M3 — Sourcing engine:** Shopping lists, geo radius + delivery region scoring, single-best-store results UI
-- **M4 — Community layer:** Flags, moderator dashboard, vendor suggestions, invite management
+- **M3 — Sourcing engine:** ✅ Shopping lists, geo radius + delivery region scoring, single-best-store results UI
+- **M4 — Community layer:** ✅ Flags, moderator dashboard, vendor suggestions, invite management
 - **M5 — Web extraction:** `vendor_sources`, nightly cron job (Supabase Edge Function), extraction review queue
 
 ## Architecture

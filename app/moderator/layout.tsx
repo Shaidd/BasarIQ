@@ -20,6 +20,8 @@ export default async function ModeratorLayout({ children }: { children: React.Re
           <Link href="/moderator/invites" className="hover:text-gray-900 transition-colors">Invites</Link>
           <Link href="/moderator/vendors" className="hover:text-gray-900 transition-colors">Vendors</Link>
           <Link href="/moderator/aliases" className="hover:text-gray-900 transition-colors">Aliases</Link>
+          <Link href="/moderator/extractions" className="hover:text-gray-900 transition-colors">Extractions</Link>
+          <Link href="/moderator/sources" className="hover:text-gray-900 transition-colors">Sources</Link>
         </nav>
       </div>
       {children}
