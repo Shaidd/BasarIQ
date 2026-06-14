@@ -26,6 +26,7 @@ export default async function HomePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <QuickLink href="/cuts" title="Browse cuts" desc="Search the beef cut catalog" emoji="🥩" />
         <QuickLink href="/vendors" title="Browse vendors" desc="Find butchers by region" emoji="🏪" />
+        <QuickLink href="/ocr" title="Log photo" desc="Scan a price tag with Claude OCR" emoji="📷" />
       </div>
     </main>
   )
