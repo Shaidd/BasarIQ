@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Region, Tables } from '@/supabase/types'
+import VendorSuggestionForm from '@/components/VendorSuggestionForm'
 
 const REGIONS: { value: Region; label: string }[] = [
   { value: 'sharon', label: 'Sharon' },
@@ -98,6 +99,10 @@ export default async function VendorsPage({
       {vendors.length === 0 && (
         <p className="text-gray-400 text-center py-12">No vendors found</p>
       )}
+
+      <div className="border-t pt-6">
+        <VendorSuggestionForm />
+      </div>
     </main>
   )
 }

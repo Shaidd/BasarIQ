@@ -457,6 +457,7 @@ export type Database = {
     Functions: {
       get_user_role: { Args: Record<PropertyKey, never>; Returns: string }
       // NOTE: manually added — do not overwrite when running gen types
+      validate_invite_code: { Args: { p_code: string }; Returns: boolean }
       get_vendors_in_radius: {
         Args: { user_lat: number; user_lng: number; radius_km: number }
         Returns: Database['public']['Tables']['vendors']['Row'][]
