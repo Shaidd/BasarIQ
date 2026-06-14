@@ -9,11 +9,15 @@ export default async function ModeratorDashboard() {
     { count: pendingVendorCount },
     { count: aliasSuggestionCount },
     { count: activeInviteCount },
+    { count: pendingExtractionCount },
+    { count: brokenSourceCount },
   ] = await Promise.all([
     supabase.from('flags').select('id', { count: 'exact', head: true }).is('resolved_by', null),
     supabase.from('vendors').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
     supabase.from('alias_suggestions').select('id', { count: 'exact', head: true }).is('promoted_at', null),
     supabase.from('invites').select('id', { count: 'exact', head: true }).is('used_by', null).gt('expires_at', new Date().toISOString()),
+    supabase.from('price_observations').select('id', { count: 'exact', head: true }).eq('source', 'web_auto').eq('status', 'hidden'),
+    supabase.from('vendor_sources').select('id', { count: 'exact', head: true }).eq('status', 'broken'),
   ])
 
   const cards = [
@@ -21,10 +25,12 @@ export default async function ModeratorDashboard() {
     { label: 'Pending vendors', value: pendingVendorCount ?? 0, href: '/moderator/vendors', urgent: false },
     { label: 'Alias suggestions', value: aliasSuggestionCount ?? 0, href: '/moderator/aliases', urgent: false },
     { label: 'Active invites', value: activeInviteCount ?? 0, href: '/moderator/invites', urgent: false },
+    { label: 'Pending extractions', value: pendingExtractionCount ?? 0, href: '/moderator/extractions', urgent: (pendingExtractionCount ?? 0) > 0 },
+    { label: 'Broken sources', value: brokenSourceCount ?? 0, href: '/moderator/sources', urgent: (brokenSourceCount ?? 0) > 0 },
   ]
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
       {cards.map(card => (
         <Link
           key={card.href}
